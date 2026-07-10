@@ -12,7 +12,7 @@ import '../assets/style/navbar.css';
         Acceuil
       </RouterLink>
       <RouterLink
-        to="/connection"
+        to="/login"
         class="nav"
       >
         Se connecter

@@ -13,9 +13,10 @@ const errorMessage = ref('');
 
 const successMessage = ref('');
 
-const submit = async () => {
+const register = async () => {
   try {
-    const response = await axios.post('http://localhost:3000/api/auth/register', form);
+    const api = `${import.meta.env.VITE_API_URL}/api/auth/register`;
+    await axios.post(api, form);
     successMessage.value = 'utilisateur créé';
     // efface une éventuelle ancienne erreur
     errorMessage.value = '';
@@ -26,7 +27,11 @@ const submit = async () => {
     form.email = '';
     form.password = '';
   } catch (error) {
-    errorMessage.value = error.response.data.message;
+    if (error.response === undefined) {
+      errorMessage.value = 'panne réseau';
+    } else {
+      errorMessage.value = error.response.data.message;
+    }
   }
 };
 
@@ -43,7 +48,7 @@ const submit = async () => {
     </p>
     <form
       class="form"
-      @submit.prevent="submit"
+      @submit.prevent="register"
     >
       <label for="">Prénom</label>
       <input
@@ -69,7 +74,9 @@ const submit = async () => {
         type="password"
       >
       <br>
-      <button type="submit">
+      <button
+        type="submit"
+      >
         créer un compte
       </button>
     </form>

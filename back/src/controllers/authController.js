@@ -29,9 +29,9 @@ const saveRefreshToken = async (refreshToken, idUsers) => {
     const createdAT = new Date();
     const expiresAT = new Date();
     expiresAT.setDate(createdAT.getDate() + 7);
-    await db.query('INSERT INTO refresh_token(token, createdAT, expiresAT, id_users) VALUES (?, ?, ?, ?)', [refreshToken, createdAT, expiresAT, idUsers]);
+    await db.query('INSERT INTO refresh_token(token, created_at, expires_at, id_users) VALUES (?, ?, ?, ?)', [refreshToken, createdAT, expiresAT, idUsers]);
   } catch (error) {
-    console.error('Erreur lors de la sauvegarde du refresh token');
+    console.error('Erreur lors de la sauvegarde du refresh token', error);
     throw error;
   }
 };
@@ -46,15 +46,15 @@ const login = async (req, res) => {
     if (users.length !== 0) {
       const loginCheck = await bcrypt.compare(password, users[0].password);
       if (loginCheck) {
-        const token = jwt.sign({ id: users[0].id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+        const token = jwt.sign({ id: users[0].id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' }); // 3 arguments : playload, le secret, les options
         const refreshToken = jwt.sign({ id: users[0].id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
         await saveRefreshToken(refreshToken, users[0].id);
-        res.json({ tokenAcess: token, tokenBdd: refreshToken });
+        return res.json({ tokenAccess: token, tokenBdd: refreshToken });
       }
     }
-    res.status(400).json({ message: 'Email ou mot de passe incorrect' });
+    return res.status(400).json({ message: 'Email ou mot de passe incorrect' });
   } catch (error) {
-    res.status(500).json({ message: 'Erreur survenue', error });
+    return res.status(500).json({ message: 'Erreur survenue', error });
   }
 };
 
@@ -70,8 +70,8 @@ const refresh = async (req, res) => {
         if (err) {
           return res.status(403).json({ message: 'token invalide' });
         }
-        const accestoken = jwt.sign({ id: tokenCheck[0].id_users }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
-        return res.json({ accestoken });
+        const accesstoken = jwt.sign({ id: tokenCheck[0].id_users }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' });
+        return res.json({ tokenAccess: accesstoken });
       });
     }
     return res.status(401).json({ message: 'token expiré' });
