@@ -6,7 +6,7 @@ Plisk 3D est une application e-commerce full-stack sur le thème de l'impression
 
 ## Stack technique
 
-- **Frontend** : Vue.js 3 (Composition API, `<script setup>`), Vue Router, Axios
+- **Frontend** : Vue.js 3 (Composition API, `<script setup>`), Vue Router, Pinia, Axios
 - **Backend** : Node.js, Express.js, JWT (`jsonwebtoken`), `bcrypt`, `cookie-parser`, `cors`, `dotenv`, `mysql2`
 - **Documentation API** : Swagger (`swagger-jsdoc` + `swagger-ui-express`), exposée sur `/api-docs`
 - **Base de données** : MySQL (via phpMyAdmin / WAMP)
@@ -42,6 +42,7 @@ DB_PASS=...
 DB_NAME=...
 ACCESS_TOKEN_SECRET=...
 REFRESH_TOKEN_SECRET=...
+FRONT_URL=http://localhost:5173
 ```
 
 ```bash
@@ -72,11 +73,11 @@ npm run dev
 - [x] Gestion des erreurs (identifiants invalides vs erreur réseau)
 - [x] Redirection automatique après connexion réussie
 - [x] Documentation de l'API via Swagger
+- [x] Refresh token stocké en cookie `httpOnly` (arbitrage tranché, ne transite plus dans le corps JSON)
+- [x] Store Pinia (`front/src/stores/auth.js`) pour centraliser l'état d'authentification (`login`, `refresh`, `isLoggedIn`)
+- [x] Persistance de la connexion au rechargement de page (appel de `auth.refresh()` au montage de `App.vue`)
 - [ ] Page de détail produit au clic
-- [ ] Arbitrage du stockage du refresh token (`localStorage` vs cookie `httpOnly`)
 - [ ] Intercepteur Axios pour le rafraîchissement automatique du token et la déconnexion forcée
-- [ ] Store Pinia pour centraliser l'état d'authentification
-- [ ] Persistance de la connexion au rechargement de page
 - [ ] Routes protégées (guards Vue Router)
 - [ ] CRUD administrateur pour les produits
 - [ ] Panier (page actuellement un simple placeholder, à construire avec Pinia + persistance)

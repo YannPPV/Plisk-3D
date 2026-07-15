@@ -1,7 +1,9 @@
 <script setup>
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
+import useAuthStore from '../stores/auth';
+
+const auth = useAuthStore();
 
 const router = useRouter();
 
@@ -10,15 +12,11 @@ const form = reactive({
   password: '',
 });
 
-const token = ref('');
 const errorMessage = ref('');
 
 const login = async () => {
   try {
-    const api = `${import.meta.env.VITE_API_URL}/api/auth/login`;
-    const reponseLogin = await axios.post(api, form);
-    token.value = reponseLogin.data.tokenAccess;
-    localStorage.setItem('refreshToken', reponseLogin.data.tokenBdd);
+    await auth.login(form);
     router.push({ name: 'home' });
   } catch (error) {
     if (error.response === undefined) {

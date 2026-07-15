@@ -19,7 +19,8 @@ app.use(express.json());
 
 app.use(cookieParser());
 
-app.use(cors()); // autorise Vue.js (port 5173) à contacter Express (port 3000)
+// autorise Vue.js (port 5173) à contacter Express (port 3000)
+app.use(cors({ origin: process.env.FRONT_URL, credentials: true }));
 
 const productsRouter = require('./src/routes/products');
 

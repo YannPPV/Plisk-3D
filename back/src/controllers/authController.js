@@ -49,7 +49,10 @@ const login = async (req, res) => {
         const token = jwt.sign({ id: users[0].id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' }); // 3 arguments : playload, le secret, les options
         const refreshToken = jwt.sign({ id: users[0].id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
         await saveRefreshToken(refreshToken, users[0].id);
-        return res.json({ tokenAccess: token, tokenBdd: refreshToken });
+        res.cookie('refreshToken', refreshToken, {
+          httpOnly: true, sameSite: 'strict', secure: process.env.NODE_ENV === 'production', maxAge: 604800000,
+        });
+        return res.json({ tokenAccess: token });
       }
     }
     return res.status(400).json({ message: 'Email ou mot de passe incorrect' });
@@ -60,7 +63,7 @@ const login = async (req, res) => {
 
 const refresh = async (req, res) => {
   try {
-    const { token } = req.body;
+    const token = req.cookies.refreshToken;
     const [tokenCheck] = await db.query('SELECT token, created_at, expires_at, id_users FROM refresh_token WHERE token = ?', [token]);
     if (tokenCheck.length === 0) {
       return res.status(401).json({ message: 'token inconnu' });
