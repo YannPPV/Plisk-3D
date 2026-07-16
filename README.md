@@ -76,6 +76,7 @@ npm run dev
 - [x] Refresh token stocké en cookie `httpOnly` (arbitrage tranché, ne transite plus dans le corps JSON)
 - [x] Store Pinia (`front/src/stores/auth.js`) pour centraliser l'état d'authentification (`login`, `refresh`, `isLoggedIn`)
 - [x] Persistance de la connexion au rechargement de page (appel de `auth.refresh()` au montage de `App.vue`)
+- [x] Déconnexion (`POST /api/auth/logout`) : révoque le refresh token en base et vide le cookie `httpOnly`
 - [ ] Page de détail produit au clic
 - [ ] Intercepteur Axios pour le rafraîchissement automatique du token et la déconnexion forcée
 - [ ] Routes protégées (guards Vue Router)

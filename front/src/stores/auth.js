@@ -21,6 +21,14 @@ const useAuthStore = defineStore('auth', {
       const responseRefresh = await axios.post(api, {}, { withCredentials: true });
       this.token = responseRefresh.data.tokenAccess;
     },
+    async logout() {
+      try {
+        const api = `${import.meta.env.VITE_API_URL}/api/auth/logout`;
+        await axios.post(api, {}, { withCredentials: true });
+      } finally {
+        this.token = '';
+      }
+    },
   },
 
   getters: {

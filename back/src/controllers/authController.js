@@ -50,7 +50,7 @@ const login = async (req, res) => {
         const refreshToken = jwt.sign({ id: users[0].id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
         await saveRefreshToken(refreshToken, users[0].id);
         res.cookie('refreshToken', refreshToken, {
-          httpOnly: true, sameSite: 'strict', secure: process.env.NODE_ENV === 'production', maxAge: 604800000,
+          httpOnly: true, sameSite: 'strict', secure: process.env.NODE_ENV === 'production', maxAge: 604800000, path: '/',
         });
         return res.json({ tokenAccess: token });
       }
@@ -83,8 +83,22 @@ const refresh = async (req, res) => {
   }
 };
 
+const logout = async (req, res) => {
+  try {
+    const token = req.cookies.refreshToken;
+    await db.query('DELETE FROM refresh_token WHERE token = ?', [token]);
+    res.clearCookie('refreshToken', {
+      httpOnly: true, sameSite: 'strict', secure: process.env.NODE_ENV === 'production', path: '/',
+    });
+    return res.status(200).json({ message: 'OK' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Erreur survenue', error });
+  }
+};
+
 module.exports = {
   register,
   login,
   refresh,
+  logout,
 };
