@@ -1,24 +1,24 @@
 <script setup>
 // onMounted exécute une seule fois, quand la page est affichée
 import { ref, onMounted } from 'vue';
-import api from '../services/api';
 
 const products = ref([]);
 
 const loading = ref(true);
 
-const errorMessage = ref(null);
+const error = ref(null);
 
 onMounted(async () => {
   try {
-    const response = await api.get('/api/products');
-    products.value = response.data;
-  } catch (err) {
-    if (err.response === undefined) {
-      errorMessage.value = 'panne réseau';
-    } else {
-      errorMessage.value = err.response.data.message;
+    // envoie requête GET à API Express, await met en pause le code jusqu'à ce qu'Express réponde
+    const response = await fetch('http://localhost:3000/api/products');
+    // response.ok est true si Express a répondu
+    if (!response.ok) {
+      throw new Error('Erreur lors de la récupération des produits');
     }
+    products.value = await response.json();
+  } catch (err) {
+    error.value = err.message;
   } finally {
     loading.value = false;
   }
@@ -33,8 +33,8 @@ onMounted(async () => {
       <p v-if="loading">
         Chargements des produits...
       </p>
-      <p v-else-if="errorMessage">
-        {{ errorMessage }}
+      <p v-else-if="error">
+        {{ error }}
       </p>
       <div
         v-else
