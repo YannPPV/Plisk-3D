@@ -77,9 +77,10 @@ npm run dev
 - [x] Store Pinia (`front/src/stores/auth.js`) pour centraliser l'état d'authentification (`login`, `refresh`, `isLoggedIn`)
 - [x] Persistance de la connexion au rechargement de page (appel de `auth.refresh()` au montage de `App.vue`)
 - [x] Déconnexion (`POST /api/auth/logout`) : révoque le refresh token en base et vide le cookie `httpOnly`
+- [x] Client Axios centralisé (`front/src/services/api.js`) : ajoute automatiquement le token en en-tête et gère le rafraîchissement + rejeu de la requête sur un 401
+- [x] Routes protégées côté front (guard `router.beforeEach` sur `meta.requiresAuth`, ex : `/basket`)
 - [ ] Page de détail produit au clic
-- [ ] Intercepteur Axios pour le rafraîchissement automatique du token et la déconnexion forcée
-- [ ] Routes protégées (guards Vue Router)
+- [ ] Middleware d'authentification backend (`back/src/middlewares/authMiddleware.js`) : créé mais pas encore branché sur les routes
 - [ ] CRUD administrateur pour les produits
 - [ ] Panier (page actuellement un simple placeholder, à construire avec Pinia + persistance)
 - [ ] Récapitulatif de commande

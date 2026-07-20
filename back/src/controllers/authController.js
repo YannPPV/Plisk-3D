@@ -46,7 +46,7 @@ const login = async (req, res) => {
     if (users.length !== 0) {
       const loginCheck = await bcrypt.compare(password, users[0].password);
       if (loginCheck) {
-        const token = jwt.sign({ id: users[0].id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' }); // 3 arguments : playload, le secret, les options
+        const token = jwt.sign({ id: users[0].id }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15 m' }); // 3 arguments : playload, le secret, les options
         const refreshToken = jwt.sign({ id: users[0].id }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
         await saveRefreshToken(refreshToken, users[0].id);
         res.cookie('refreshToken', refreshToken, {

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import api from '../services/api';
 
 // state: les données brutes stockées,
 // actions: les fonctions qui ont le droit de modifier ce state,
@@ -12,19 +12,16 @@ const useAuthStore = defineStore('auth', {
 
   actions: {
     async login(form) {
-      const api = `${import.meta.env.VITE_API_URL}/api/auth/login`;
-      const reponseLogin = await axios.post(api, form, { withCredentials: true });
+      const reponseLogin = await api.post('/api/auth/login', form);
       this.token = reponseLogin.data.tokenAccess; // this.token appelle le token de state
     },
     async refresh() {
-      const api = `${import.meta.env.VITE_API_URL}/api/auth/refresh`;
-      const responseRefresh = await axios.post(api, {}, { withCredentials: true });
+      const responseRefresh = await api.post('/api/auth/refresh', {});
       this.token = responseRefresh.data.tokenAccess;
     },
     async logout() {
       try {
-        const api = `${import.meta.env.VITE_API_URL}/api/auth/logout`;
-        await axios.post(api, {}, { withCredentials: true });
+        await api.post('/api/auth/logout', {});
       } finally {
         this.token = '';
       }

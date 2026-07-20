@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref } from 'vue';
-import axios from 'axios';
+import api from '../services/api';
 
 const form = reactive({
   first_name: '',
@@ -15,8 +15,7 @@ const successMessage = ref('');
 
 const register = async () => {
   try {
-    const api = `${import.meta.env.VITE_API_URL}/api/auth/register`;
-    await axios.post(api, form);
+    await api.post('/api/auth/register', form);
     successMessage.value = 'utilisateur créé';
     // efface une éventuelle ancienne erreur
     errorMessage.value = '';
