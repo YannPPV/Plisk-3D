@@ -1,15 +1,16 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import navbar from './components/navbar.vue';
-import useAuthStore from './stores/auth';
+import { useRouter } from 'vue-router';
+import useAuthStore from '../stores/auth';
 
 const auth = useAuthStore();
-
+const router = useRouter();
 const errorMessage = ref('');
 
-const refresh = async () => {
+const logout = async () => {
   try {
-    await auth.refresh();
+    await auth.logout();
+    router.push({ name: 'home' });
   } catch (error) {
     if (error.response === undefined) {
       errorMessage.value = 'panne réseau';
@@ -19,13 +20,14 @@ const refresh = async () => {
   }
 };
 
-onMounted(refresh);
+onMounted(logout);
 
 </script>
 
 <template>
   <div>
-    <navbar />
-    <RouterView />
+    <p v-if="errorMessage">
+      {{ errorMessage }}
+    </p>
   </div>
 </template>
