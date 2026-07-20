@@ -5,6 +5,8 @@ import Login from '../views/Login.vue';
 import Basket from '../views/Basket.vue';
 import Register from '../views/Register.vue';
 import Logout from '../views/Logout.vue';
+import Printing from '../views/3dPrinting.vue';
+import Product from '../views/product.vue';
 
 const routes = [
   { path: '/', component: Home, name: 'home' },
@@ -14,6 +16,8 @@ const routes = [
   },
   { path: '/register', component: Register, name: 'register' },
   { path: '/logout', component: Logout, name: 'logout' },
+  { path: '/3d-printing', component: Printing },
+  { path: '/product/:id', component: Product },
 ];
 
 const router = createRouter({

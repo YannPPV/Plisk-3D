@@ -1,0 +1,44 @@
+.products-flex{
+    display: grid;
+    place-items: center;
+    /* "auto-fit" crée autant de colonnes que possible */
+    /* "minmax(250px, 1fr)" carte fait au moins 250px, et prend le reste de la place sinon */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 50px;
+    padding: 20px;
+    
+}
+
+.product-card{
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    background-color: #161616;
+    width: 250px;
+    min-height: 350px;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 20px;
+    box-sizing: border-box;
+    font-family: sans-serif;
+    font-weight: bold;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.5);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+}
+
+.product-card:hover{
+    transform: scale(1.05);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    cursor: pointer;
+}
+
+.product-img{
+    max-width: 100%;
+    max-height: 180px; /* Un peu moins que la hauteur de la carte */
+    object-fit: contain;
+    display: block;
+    margin-bottom: 10px;
+}
