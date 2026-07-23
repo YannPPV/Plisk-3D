@@ -1,0 +1,22 @@
+body{
+    background-color: rgb(42, 42, 49);
+    color: aliceblue;
+    padding-top: 60px;
+    
+}
+
+.hero{
+    background-image: url('../images/boite.png') ;
+    background-size: cover;
+    background-position: center;
+    width: 100%;
+    min-height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; 
+}
+
+.hero-container{
+    margin-top: 100px;
+}
+
