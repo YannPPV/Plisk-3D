@@ -24,10 +24,10 @@ app.use(cors({ origin: process.env.FRONT_URL, credentials: true }));
 
 const productsRouter = require('./src/routes/products');
 
-const connexion = require('./src/routes/auth');
+const login = require('./src/routes/auth');
 
 app.use('/api/products', productsRouter);
-app.use('/api/auth', connexion);
+app.use('/api/auth', login);
 // Route documentation Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
