@@ -26,8 +26,11 @@ const productsRouter = require('./src/routes/products');
 
 const login = require('./src/routes/auth');
 
+const basket = require('./src/routes/baskets');
+
 app.use('/api/products', productsRouter);
 app.use('/api/auth', login);
+app.use('/api/basket', basket);
 // Route documentation Swagger
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
