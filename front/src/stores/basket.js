@@ -27,7 +27,7 @@ const useBasketStore = defineStore('basket', {
 
   getters: {
     totalPrice(state) {
-      const total = state.basket.reduce((acc, elt) => { return acc + elt.price * elt.quantity }, 0);
+      const total = state.basket.reduce((acc, elt) => acc + elt.price * elt.quantity, 0);
       return total;
     },
   },

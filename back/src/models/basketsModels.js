@@ -14,7 +14,7 @@ const createBasket = async (idUser) => {
 
 const getBasket = async (idUser) => {
   const [result] = await db.query(`
-    SELECT products.name, products.price, baskets_products.quantity, images.url 
+    SELECT products.id, products.name, products.price, baskets_products.quantity, images.url 
     FROM baskets 
     JOIN baskets_products ON baskets.id = baskets_products.id_baskets 
     JOIN products ON products.id = baskets_products.id_products 
