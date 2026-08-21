@@ -2,7 +2,7 @@ const basketModel = require('../models/basketsModels');
 
 const getBasketId = async (idUser) => {
   const basket = await basketModel.getBasketIdByUserId(idUser);
-  const { id } = basket[0].id;
+  const { id } = basket[0];
   return id;
 };
 

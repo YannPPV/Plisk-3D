@@ -5,6 +5,13 @@ const getBasketIdByUserId = async (idUser) => {
   return result;
 };
 
+const createBasket = async (idUser) => {
+  const [result] = await db.query(`
+    INSERT INTO baskets(id_users) 
+    VALUES(?)`, [idUser]);
+  return result;
+};
+
 const getBasket = async (idUser) => {
   const [result] = await db.query(`
     SELECT products.name, products.price, baskets_products.quantity, images.url 
@@ -47,6 +54,7 @@ const deleteProductsInBaskets = async (idProducts, idBaskets) => {
 };
 
 module.exports = {
+  createBasket,
   getBasketIdByUserId,
   getBasket,
   checkProductsInBasketsExists,

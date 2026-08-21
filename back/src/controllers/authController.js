@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const authModels = require('../models/authModels');
+const basketModel = require('../models/basketsModels');
 
 const register = async (req, res) => {
   try {
@@ -15,11 +16,13 @@ const register = async (req, res) => {
     // 10 est le niveau de complexité du Salt
       const hashedPassword = await bcrypt.hash(password, 10);
       const result = await authModels.insertUser(firstName, lastName, email, hashedPassword);
+      await basketModel.createBasket(result.insertId);
       res.json(result);
     } else {
       res.status(400).json({ message: 'cette adresse email est déjà utilisé' });
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: 'Erreur survenue', error });
   }
 };
