@@ -1,6 +1,9 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, watch, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import useBasketStore from '../stores/basket';
+
+const basket = useBasketStore();
 
 const route = useRoute();
 
@@ -9,6 +12,28 @@ const product = ref(null);
 const error = ref(null);
 
 const loading = ref(true);
+
+const errorMessageItem = ref(null);
+
+const addSuccess = ref(null);
+
+watch(errorMessageItem, () => window.scrollTo(0, 0));
+
+const addBasket = async (id) => {
+  try {
+    await basket.addProduct(id);
+    errorMessageItem.value = null;
+    addSuccess.value = 'Article ajouté au panier';
+    setTimeout(() => { addSuccess.value = null; }, 1000);
+  } catch (err) {
+    if (err.response === undefined) {
+      errorMessageItem.value = 'panne réseau';
+    } else {
+      errorMessageItem.value = err.response.data.message;
+    }
+    addSuccess.value = null;
+  }
+};
 
 onMounted(async () => {
   try {
@@ -27,6 +52,9 @@ onMounted(async () => {
 
 <template>
   <div>
+    <p v-if="errorMessageItem">
+      {{ errorMessageItem }}
+    </p>
     <p v-if="loading">
       chargement en cours...
     </p>
@@ -40,6 +68,12 @@ onMounted(async () => {
       >
       <h2>{{ product.name }}</h2>
       <p>{{ product.price }} €</p>
+      <button @click="addBasket(product.id)">
+        Ajouter au panier
+      </button>
+      <p v-if="addSuccess">
+        {{ addSuccess }}
+      </p>
     </div>
   </div>
 </template>

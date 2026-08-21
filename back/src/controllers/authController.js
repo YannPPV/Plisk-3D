@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const db = require('../config/db');
+const authModels = require('../models/authModels');
+const basketModel = require('../models/basketsModels');
 
 const register = async (req, res) => {
   try {
@@ -10,16 +11,18 @@ const register = async (req, res) => {
       email,
       password,
     } = req.body;
-    const [userCheck] = await db.query('SELECT email FROM users WHERE email = ?', [email]);
+    const userCheck = await authModels.checkEmailExists(email);
     if (userCheck.length === 0) {
     // 10 est le niveau de complexité du Salt
       const hashedPassword = await bcrypt.hash(password, 10);
-      const [result] = await db.query('INSERT INTO users(first_name, last_name, email, password) VALUES(?, ?, ?, ?)', [firstName, lastName, email, hashedPassword]);
+      const result = await authModels.insertUser(firstName, lastName, email, hashedPassword);
+      await basketModel.createBasket(result.insertId);
       res.json(result);
     } else {
       res.status(400).json({ message: 'cette adresse email est déjà utilisé' });
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: 'Erreur survenue', error });
   }
 };
@@ -29,7 +32,7 @@ const saveRefreshToken = async (refreshToken, idUsers) => {
     const createdAT = new Date();
     const expiresAT = new Date();
     expiresAT.setDate(createdAT.getDate() + 7);
-    await db.query('INSERT INTO refresh_token(token, created_at, expires_at, id_users) VALUES (?, ?, ?, ?)', [refreshToken, createdAT, expiresAT, idUsers]);
+    await authModels.insertToken(refreshToken, createdAT, expiresAT, idUsers);
   } catch (error) {
     console.error('Erreur lors de la sauvegarde du refresh token', error);
     throw error;
@@ -42,7 +45,7 @@ const login = async (req, res) => {
       email,
       password,
     } = req.body;
-    const [users] = await db.query('SELECT id, email, password FROM users WHERE email = ?', [email]);
+    const users = await authModels.getUserByEmail(email);
     if (users.length !== 0) {
       const loginCheck = await bcrypt.compare(password, users[0].password);
       if (loginCheck) {
@@ -64,7 +67,7 @@ const login = async (req, res) => {
 const refresh = async (req, res) => {
   try {
     const token = req.cookies.refreshToken;
-    const [tokenCheck] = await db.query('SELECT token, created_at, expires_at, id_users FROM refresh_token WHERE token = ?', [token]);
+    const tokenCheck = await authModels.getToken(token);
     if (tokenCheck.length === 0) {
       return res.status(401).json({ message: 'token inconnu' });
     }
@@ -86,7 +89,7 @@ const refresh = async (req, res) => {
 const logout = async (req, res) => {
   try {
     const token = req.cookies.refreshToken;
-    await db.query('DELETE FROM refresh_token WHERE token = ?', [token]);
+    await authModels.deleteRefreshTokenByToken(token);
     res.clearCookie('refreshToken', {
       httpOnly: true, sameSite: 'strict', secure: process.env.NODE_ENV === 'production', path: '/',
     });
