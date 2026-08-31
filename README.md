@@ -23,6 +23,7 @@ Plisk 3D est une application e-commerce full-stack sur le thème de l'impression
 
 - **Frontend** : Vue.js 3 (Composition API, `<script setup>`), Vue Router, Pinia, Axios
 - **Backend** : Node.js, Express.js, JWT (`jsonwebtoken`), `bcrypt`, `cookie-parser`, `cors`, `dotenv`, `mysql2`
+- **Paiement** : Stripe Checkout (`stripe`), en mode test
 - **Documentation API** : Swagger (`swagger-jsdoc` + `swagger-ui-express`), exposée sur `/api-docs`
 - **Base de données** : MySQL (via phpMyAdmin / WAMP)
 - **Outils de développement** : VS Code, Vite, ESLint
@@ -50,11 +51,11 @@ projet_bts/
 │       ├── config/
 │       │   ├── db.js                 → connexion MySQL
 │       │   └── swagger.js            → config Swagger
-│       ├── controllers/              → logique des routes (auth, basket, products)
+│       ├── controllers/              → logique des routes (auth, basket, products, purchase)
 │       ├── middlewares/
 │       │   └── authMiddleware.js     → vérification du JWT (checkAuth)
-│       ├── models/                   → requêtes SQL (authModels, basketsModels)
-│       └── routes/                   → définition des routes Express (auth, baskets, products)
+│       ├── models/                   → requêtes SQL (authModels, basketsModels, usersModels)
+│       └── routes/                   → définition des routes Express (auth, baskets, products, purchase)
 └── front/
     └── src/
         ├── assets/                   → images et styles
@@ -113,6 +114,7 @@ Voir la section [Variables d'environnement](#variables-denvironnement) pour les 
 | `ACCESS_TOKEN_SECRET` | Secret de signature du JWT d'accès |
 | `REFRESH_TOKEN_SECRET` | Secret de signature du refresh token |
 | `FRONT_URL` | URL du frontend autorisée par CORS (ex : `http://localhost:5173`) |
+| `STRIPE_API` | Clé secrète Stripe (mode test) utilisée pour créer les sessions de paiement |
 
 ### Frontend (`front/.env`)
 
@@ -143,7 +145,7 @@ Voir la section [Variables d'environnement](#variables-denvironnement) pour les 
 
 - [ ] CRUD administrateur pour les produits
 - [ ] Récapitulatif de commande
-- [ ] Paiement en mode test (Stripe)
+- [ ] Paiement en mode test (Stripe) — session de paiement créée côté backend (`POST /api/purchase`, à partir du contenu du panier) ; reste à brancher le bouton côté panier et les pages de succès/annulation
 - [ ] Gestion des rôles utilisateurs
 
 ## Base de données
