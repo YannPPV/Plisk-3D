@@ -115,6 +115,7 @@ Voir la section [Variables d'environnement](#variables-denvironnement) pour les 
 | `REFRESH_TOKEN_SECRET` | Secret de signature du refresh token |
 | `FRONT_URL` | URL du frontend autorisée par CORS (ex : `http://localhost:5173`) |
 | `STRIPE_API` | Clé secrète Stripe (mode test) utilisée pour créer les sessions de paiement |
+| `STRIPE_WEBHOOK_SECRET` | Secret du webhook Stripe (`POST /api/purchase/stripe`), utilisé pour vérifier la signature des événements |
 
 ### Frontend (`front/.env`)
 
@@ -145,7 +146,7 @@ Voir la section [Variables d'environnement](#variables-denvironnement) pour les 
 
 - [ ] CRUD administrateur pour les produits
 - [ ] Récapitulatif de commande
-- [ ] Paiement en mode test (Stripe) — session de paiement créée côté backend (`POST /api/purchase`, à partir du contenu du panier) ; reste à brancher le bouton côté panier et les pages de succès/annulation
+- [ ] Paiement en mode test (Stripe) — session de paiement créée côté backend (`POST /api/purchase`, à partir du contenu du panier) et webhook `POST /api/purchase/stripe` qui réceptionne `checkout.session.completed` ; reste à créer la commande en base depuis le webhook et à brancher le bouton + les pages de succès/annulation côté front
 - [ ] Gestion des rôles utilisateurs
 
 ## Base de données

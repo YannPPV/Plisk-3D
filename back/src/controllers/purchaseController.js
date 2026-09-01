@@ -30,6 +30,7 @@ const createSession = async (req, res) => {
     if (lineItems.length !== 0) {
       const email = await userModel.getUserEmailByIdUser(req.idUser);
       const session = await stripe.checkout.sessions.create({
+        client_reference_id: req.idUser,
         customer_email: email,
         success_url: `${process.env.FRONT_URL}/succes`,
         cancel_url: `${process.env.FRONT_URL}/cancel`,
@@ -44,6 +45,23 @@ const createSession = async (req, res) => {
   }
 };
 
+const webhook = async (req, res) => {
+  try {
+    const signature = req.headers['stripe-signature'];
+    const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+    const event = stripe.webhooks.constructEvent(req.body, signature, endpointSecret);
+    if (event.type === 'checkout.session.completed') {
+      const idUser = event.data.object.client_reference_id;
+      // création de la commande de l'utilisateur avec idUser
+      console.log("id de l'user :", { idUser });
+    }
+    return res.status(200).json({ received: true });
+  } catch (error) {
+    return res.status(400).json({ message: 'une erreur est survenue', error: error.message });
+  }
+};
+
 module.exports = {
   createSession,
+  webhook,
 };
