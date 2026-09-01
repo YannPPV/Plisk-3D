@@ -23,6 +23,7 @@ Plisk 3D est une application e-commerce full-stack sur le thème de l'impression
 
 - **Frontend** : Vue.js 3 (Composition API, `<script setup>`), Vue Router, Pinia, Axios
 - **Backend** : Node.js, Express.js, JWT (`jsonwebtoken`), `bcrypt`, `cookie-parser`, `cors`, `dotenv`, `mysql2`
+- **Paiement** : Stripe Checkout (`stripe`), en mode test
 - **Documentation API** : Swagger (`swagger-jsdoc` + `swagger-ui-express`), exposée sur `/api-docs`
 - **Base de données** : MySQL (via phpMyAdmin / WAMP)
 - **Outils de développement** : VS Code, Vite, ESLint
@@ -50,11 +51,11 @@ projet_bts/
 │       ├── config/
 │       │   ├── db.js                 → connexion MySQL
 │       │   └── swagger.js            → config Swagger
-│       ├── controllers/              → logique des routes (auth, basket, products)
+│       ├── controllers/              → logique des routes (auth, basket, products, purchase)
 │       ├── middlewares/
 │       │   └── authMiddleware.js     → vérification du JWT (checkAuth)
-│       ├── models/                   → requêtes SQL (authModels, basketsModels)
-│       └── routes/                   → définition des routes Express (auth, baskets, products)
+│       ├── models/                   → requêtes SQL (authModels, basketsModels, usersModels)
+│       └── routes/                   → définition des routes Express (auth, baskets, products, purchase)
 └── front/
     └── src/
         ├── assets/                   → images et styles
@@ -64,8 +65,8 @@ projet_bts/
         │   └── index.js              → routes Vue Router + guard d'authentification
         ├── services/
         │   └── api.js                → client Axios centralisé (token, refresh, rejeu 401)
-        ├── stores/                   → stores Pinia (auth, basket)
-        └── views/                    → pages (Home, Login, Register, Basket, product, ...)
+        ├── stores/                   → stores Pinia (auth, basket, purchase)
+        └── views/                    → pages (Home, Login, Register, Basket, product, SuccesPurchase, CancelPurchase, ...)
 ```
 
 ## Captures d'écran
@@ -88,6 +89,8 @@ npm run dev
 ```
 
 L'API est servie sur `http://localhost:3000` et sa documentation Swagger sur `http://localhost:3000/api-docs`.
+
+> `npm run dev` lance en parallèle `nodemon` et `stripe listen --forward-to localhost:3000/api/purchase/stripe` (via `concurrently`), pour recevoir les webhooks Stripe en local. Nécessite la [Stripe CLI](https://stripe.com/docs/stripe-cli) installée et authentifiée (`stripe login`).
 
 ### Frontend
 
@@ -113,6 +116,8 @@ Voir la section [Variables d'environnement](#variables-denvironnement) pour les 
 | `ACCESS_TOKEN_SECRET` | Secret de signature du JWT d'accès |
 | `REFRESH_TOKEN_SECRET` | Secret de signature du refresh token |
 | `FRONT_URL` | URL du frontend autorisée par CORS (ex : `http://localhost:5173`) |
+| `STRIPE_API` | Clé secrète Stripe (mode test) utilisée pour créer les sessions de paiement |
+| `STRIPE_WEBHOOK_SECRET` | Secret du webhook Stripe (`POST /api/purchase/stripe`), utilisé pour vérifier la signature des événements |
 
 ### Frontend (`front/.env`)
 
@@ -138,12 +143,12 @@ Voir la section [Variables d'environnement](#variables-denvironnement) pour les 
 - [x] Page de détail produit au clic (`/product/:id`)
 - [x] Middleware d'authentification backend (`back/src/middlewares/authMiddleware.js`) branché sur les routes du panier
 - [x] Panier : store Pinia (`front/src/stores/basket.js`), vue `Basket.vue` (quantités, suppression, total), boutons "Ajouter au panier" sur les vues produit, API `/api/basket` (routes protégées)
+- [x] Paiement en mode test (Stripe) : bouton "Passer au paiement" (`Basket.vue`) → store Pinia `purchase.js` → session Stripe Checkout (`POST /api/purchase`) → redirection vers Stripe, pages `SuccesPurchase.vue`/`CancelPurchase.vue`, webhook `POST /api/purchase/stripe` qui réceptionne `checkout.session.completed`
 
 ## Roadmap
 
 - [ ] CRUD administrateur pour les produits
-- [ ] Récapitulatif de commande
-- [ ] Paiement en mode test (Stripe)
+- [ ] Récapitulatif de commande + création de la commande en base depuis le webhook Stripe (`checkout.session.completed` reçu, la persistance en base remplacera le `console.log` actuel — prévu sur une autre branche)
 - [ ] Gestion des rôles utilisateurs
 
 ## Base de données
