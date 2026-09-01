@@ -1,8 +1,11 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import useBasketStore from '../stores/basket';
+import usePurchaseStore from '../stores/purchase';
 
 const basket = useBasketStore();
+
+const purchase = usePurchaseStore();
 
 const errorMessage = ref(null);
 
@@ -29,6 +32,19 @@ const updateQuantity = async (id, quantity, delta) => {
   } catch (error) {
     if (error.response === undefined) {
       console.log(error);
+      errorMessageItem.value = 'panne réseau';
+    } else {
+      errorMessageItem.value = error.response.data.message;
+    }
+  }
+};
+
+const purchaseSession = async () => {
+  try {
+    const url = await purchase.purchaseUrl();
+    window.location.href = url;
+  } catch (error) {
+    if (error.response === undefined) {
       errorMessageItem.value = 'panne réseau';
     } else {
       errorMessageItem.value = error.response.data.message;
@@ -92,6 +108,11 @@ onMounted(async () => {
       <h3 v-else>
         Votre panier est vide
       </h3>
+      <button
+        @click="purchaseSession()"
+      >
+        Passer au paiement
+      </button>
     </div>
   </div>
 </template>

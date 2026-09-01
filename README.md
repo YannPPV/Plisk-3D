@@ -65,8 +65,8 @@ projet_bts/
         │   └── index.js              → routes Vue Router + guard d'authentification
         ├── services/
         │   └── api.js                → client Axios centralisé (token, refresh, rejeu 401)
-        ├── stores/                   → stores Pinia (auth, basket)
-        └── views/                    → pages (Home, Login, Register, Basket, product, ...)
+        ├── stores/                   → stores Pinia (auth, basket, purchase)
+        └── views/                    → pages (Home, Login, Register, Basket, product, SuccesPurchase, CancelPurchase, ...)
 ```
 
 ## Captures d'écran
@@ -89,6 +89,8 @@ npm run dev
 ```
 
 L'API est servie sur `http://localhost:3000` et sa documentation Swagger sur `http://localhost:3000/api-docs`.
+
+> `npm run dev` lance en parallèle `nodemon` et `stripe listen --forward-to localhost:3000/api/purchase/stripe` (via `concurrently`), pour recevoir les webhooks Stripe en local. Nécessite la [Stripe CLI](https://stripe.com/docs/stripe-cli) installée et authentifiée (`stripe login`).
 
 ### Frontend
 
@@ -141,12 +143,12 @@ Voir la section [Variables d'environnement](#variables-denvironnement) pour les 
 - [x] Page de détail produit au clic (`/product/:id`)
 - [x] Middleware d'authentification backend (`back/src/middlewares/authMiddleware.js`) branché sur les routes du panier
 - [x] Panier : store Pinia (`front/src/stores/basket.js`), vue `Basket.vue` (quantités, suppression, total), boutons "Ajouter au panier" sur les vues produit, API `/api/basket` (routes protégées)
+- [x] Paiement en mode test (Stripe) : bouton "Passer au paiement" (`Basket.vue`) → store Pinia `purchase.js` → session Stripe Checkout (`POST /api/purchase`) → redirection vers Stripe, pages `SuccesPurchase.vue`/`CancelPurchase.vue`, webhook `POST /api/purchase/stripe` qui réceptionne `checkout.session.completed`
 
 ## Roadmap
 
 - [ ] CRUD administrateur pour les produits
-- [ ] Récapitulatif de commande
-- [ ] Paiement en mode test (Stripe) — session de paiement créée côté backend (`POST /api/purchase`, à partir du contenu du panier) et webhook `POST /api/purchase/stripe` qui réceptionne `checkout.session.completed` ; reste à créer la commande en base depuis le webhook et à brancher le bouton + les pages de succès/annulation côté front
+- [ ] Récapitulatif de commande + création de la commande en base depuis le webhook Stripe (`checkout.session.completed` reçu, la persistance en base remplacera le `console.log` actuel — prévu sur une autre branche)
 - [ ] Gestion des rôles utilisateurs
 
 ## Base de données
