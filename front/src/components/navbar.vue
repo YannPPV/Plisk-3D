@@ -11,17 +11,46 @@ import '../assets/style/navbar.css';
       >
         Acceuil
       </RouterLink>
+
       <RouterLink
-        to="/connection"
+        to="/login"
         class="nav"
       >
         Se connecter
+      </RouterLink>
+
+      <RouterLink
+        to="/3d-printing"
+        class="nav"
+      >
+        Impression 3D
       </RouterLink>
       <RouterLink
         to="/basket"
         class="nav"
       >
         Mon panier
+      </RouterLink>
+
+      <RouterLink
+        to="/register"
+        class="nav"
+      >
+        Créer un compte
+      </RouterLink>
+
+      <RouterLink
+        to="/logout"
+        class="nav"
+      >
+        Se déconnecter
+      </RouterLink>
+
+      <RouterLink
+        to="/order"
+        class="nav"
+      >
+        Mes commandes
       </RouterLink>
     </nav>
   </header>
