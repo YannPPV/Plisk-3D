@@ -9,6 +9,7 @@ import Printing from '../views/3dPrinting.vue';
 import Product from '../views/product.vue';
 import SuccesPurchase from '../views/SuccesPurchase.vue';
 import CancelPurchase from '../views/CancelPurchase.vue';
+import Order from '../views/Order.vue';
 
 const routes = [
   { path: '/', component: Home, name: 'home' },
@@ -25,6 +26,9 @@ const routes = [
   },
   {
     path: '/cancel', component: CancelPurchase, name: 'cancel', meta: { requiresAuth: true },
+  },
+  {
+    path: '/order', component: Order, name: 'order', meta: { requiresAuth: true },
   },
 ];
 

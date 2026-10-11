@@ -66,7 +66,7 @@ projet_bts/
         ├── services/
         │   └── api.js                → client Axios centralisé (token, refresh, rejeu 401)
         ├── stores/                   → stores Pinia (auth, basket, purchase)
-        └── views/                    → pages (Home, Login, Register, Basket, product, SuccesPurchase, CancelPurchase, ...)
+        └── views/                    → pages (Home, Login, Register, Basket, product, SuccesPurchase, CancelPurchase, Order, ...)
 ```
 
 ## Captures d'écran
@@ -145,10 +145,10 @@ Voir la section [Variables d'environnement](#variables-denvironnement) pour les 
 - [x] Panier : store Pinia (`front/src/stores/basket.js`), vue `Basket.vue` (quantités, suppression, total), boutons "Ajouter au panier" sur les vues produit, API `/api/basket` (routes protégées)
 - [x] Paiement en mode test (Stripe) : bouton "Passer au paiement" (`Basket.vue`) → store Pinia `purchase.js` → session Stripe Checkout (`POST /api/purchase`, adresse de livraison collectée) → redirection vers Stripe, pages `SuccesPurchase.vue`/`CancelPurchase.vue`
 - [x] Création de la commande en base depuis le webhook Stripe : sur `checkout.session.completed`, insertion de la commande et de ses lignes (`orders`, `orders_products`) dans une transaction SQL, puis vidage du panier
+- [x] Récapitulatif de commande : vue `Order.vue` (`/order`, lien "Mes commandes" dans la navbar) listant l'historique des commandes de l'utilisateur et leurs produits, via `GET /api/order`
 
 ## Roadmap
 
-- [ ] Récapitulatif de commande (historique des commandes passées, côté front)
 - [ ] Gestion des rôles utilisateurs
 
 ## Base de données

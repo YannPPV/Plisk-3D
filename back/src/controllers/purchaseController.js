@@ -122,7 +122,7 @@ const webhook = async (req, res) => {
     return res.status(200).json({ received: true });
   } catch (error) {
     console.log(error);
-    return res.status(400).json({ message: 'une erreur est survenue', error: error.message });
+    return res.status(500).json({ message: 'une erreur est survenue', error: error.message });
   }
 };
 

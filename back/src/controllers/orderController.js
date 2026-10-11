@@ -5,6 +5,7 @@ const createRes = (resModel) => {
   resModel.forEach((element) => {
     if (!orders[element.id]) {
       orders[element.id] = {
+        id: element.id,
         country: element.country,
         address: element.address,
         city: element.city,
@@ -12,7 +13,11 @@ const createRes = (resModel) => {
         date_order: element.date_order,
         total_price: element.total_price,
         products: [
-          { quantity: element.quantity, name: element.name, url: element.url },
+          {
+            quantity: element.quantity,
+            name: element.name,
+            url: element.url,
+          },
         ],
       };
     } else {
