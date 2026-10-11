@@ -20,6 +20,12 @@ import '../assets/style/navbar.css';
       </RouterLink>
 
       <RouterLink
+        to="/3d-printing"
+        class="nav"
+      >
+        Impression 3D
+      </RouterLink>
+      <RouterLink
         to="/basket"
         class="nav"
       >
@@ -38,6 +44,13 @@ import '../assets/style/navbar.css';
         class="nav"
       >
         Se déconnecter
+      </RouterLink>
+
+      <RouterLink
+        to="/order"
+        class="nav"
+      >
+        Mes commandes
       </RouterLink>
     </nav>
   </header>

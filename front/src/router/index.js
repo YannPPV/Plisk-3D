@@ -5,6 +5,11 @@ import Login from '../views/Login.vue';
 import Basket from '../views/Basket.vue';
 import Register from '../views/Register.vue';
 import Logout from '../views/Logout.vue';
+import Printing from '../views/3dPrinting.vue';
+import Product from '../views/product.vue';
+import SuccesPurchase from '../views/SuccesPurchase.vue';
+import CancelPurchase from '../views/CancelPurchase.vue';
+import Order from '../views/Order.vue';
 
 const routes = [
   { path: '/', component: Home, name: 'home' },
@@ -14,6 +19,17 @@ const routes = [
   },
   { path: '/register', component: Register, name: 'register' },
   { path: '/logout', component: Logout, name: 'logout' },
+  { path: '/3d-printing', component: Printing },
+  { path: '/product/:id', component: Product },
+  {
+    path: '/succes', component: SuccesPurchase, name: 'succes', meta: { requiresAuth: true },
+  },
+  {
+    path: '/cancel', component: CancelPurchase, name: 'cancel', meta: { requiresAuth: true },
+  },
+  {
+    path: '/order', component: Order, name: 'order', meta: { requiresAuth: true },
+  },
 ];
 
 const router = createRouter({
