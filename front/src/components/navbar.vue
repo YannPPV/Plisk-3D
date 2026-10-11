@@ -45,6 +45,13 @@ import '../assets/style/navbar.css';
       >
         Se déconnecter
       </RouterLink>
+
+      <RouterLink
+        to="/order"
+        class="nav"
+      >
+        Mes commandes
+      </RouterLink>
     </nav>
   </header>
 </template>

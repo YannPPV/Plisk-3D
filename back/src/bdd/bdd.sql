@@ -43,6 +43,7 @@ CREATE TABLE orders(
     date_order DATETIME NOT NULL,
     country VARCHAR(50) NOT NULL,
     address VARCHAR(250) NOT NULL,
+    city VARCHAR(250) NOT NULL,
     postal_code VARCHAR(50) NOT NULL,
     delivery_url VARCHAR(250),
     total_price DECIMAL(10,2) NOT NULL,
